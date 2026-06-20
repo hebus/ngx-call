@@ -1,6 +1,32 @@
 {
   "name": "ngx-call",
   "version": "0.0.1",
+  "description": "Imperative, type-safe, promise-based dialogs & overlays for Angular — the Angular counterpart of react-call's createCallable.",
+  "keywords": [
+    "angular",
+    "dialog",
+    "modal",
+    "overlay",
+    "imperative",
+    "promise",
+    "type-safe",
+    "signals",
+    "createcallable",
+    "react-call",
+    "ngx",
+    "confirm"
+  ],
+  "homepage": "https://hebus.github.io/ngx-call/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hebus/ngx-call.git",
+    "directory": "projects/ngx-call"
+  },
+  "bugs": {
+    "url": "https://github.com/hebus/ngx-call/issues"
+  },
+  "author": "hebus",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0"
