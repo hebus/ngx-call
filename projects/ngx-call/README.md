@@ -84,6 +84,18 @@ const result = await Confirm.call({ title: 'Confirm', message: 'Continue?' });
 
 > Without `provideCallable()`, pass an injector explicitly: `Confirm.call(props, { injector })`.
 
+## How it differs from react-call
+
+Beyond the obvious Angular-vs-React: **react-call is headless** — it gives you the callable/stacking mechanism and you render and style the overlay yourself. ngx-call keeps that same headless engine (`createCallable`, `injectCallRef`, stacking, `closeAll`) **and** ships optional UI primitives built directly on web-platform standards:
+
+- **Native `<dialog>` element** — the `Dialog` wrapper drives the real element via `showModal()` / `show()`, so you get the browser **top layer**, the native `::backdrop`, focus trapping and <kbd>Esc</kbd>-to-close for free — no re-implemented modal logic.
+- **Standard Popover API** — `showPopover()` opens in the top layer with native light-dismiss (`closedby="any"`), ideal for menus, tooltips and non-modal panels — no overlay `<div>`, no manual outside-click handling.
+- **Single-backdrop stacking** — stacked native modals would each paint their own `::backdrop` and cumulatively darken the page; ngx-call keeps exactly one visible backdrop across the whole stack.
+- **No `<Root/>` to place** — react-call requires you to render `<X.Root />` in your component tree; ngx-call mounts instances imperatively (to `document.body`) once `provideCallable()` is registered, so there's nothing to wire into a template.
+- **Signals throughout** — `call.props()`, `call.index()`, `call.stackSize()` and `DialogService.openCount` are Angular signals.
+
+The UI primitives are optional: use the headless `createCallable` with your own markup, or lean on `Dialog` / `DialogContent` for the batteries-included path.
+
 ## API
 
 | Export | Role |
