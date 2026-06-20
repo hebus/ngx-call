@@ -96,6 +96,8 @@ Beyond the obvious Angular-vs-React: **react-call is headless** — it gives you
 
 The UI primitives are optional: use the headless `createCallable` with your own markup, or lean on `Dialog` / `DialogContent` for the batteries-included path.
 
+**Familiar by design** — the public API deliberately mirrors react-call's surface (`createCallable`, and `call` / `upsert` / `update` / `end` / `setRoot`). Porting a dialog between React and Angular — in either direction — is closer to a mechanical rename than a rewrite.
+
 ## API
 
 | Export | Role |
