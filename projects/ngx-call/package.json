@@ -1,6 +1,6 @@
 {
   "name": "ngx-call",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Imperative, type-safe, promise-based dialogs & overlays for Angular — the Angular counterpart of react-call's createCallable.",
   "keywords": [
     "angular",
