@@ -1,0 +1,40 @@
+{
+  "name": "ngx-call",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "gen:code": "node scripts/gen-code.mjs",
+    "prestart": "npm run gen:code",
+    "start": "ng serve",
+    "prebuild": "npm run gen:code",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "packageManager": "npm@11.3.0",
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/elements": "^22.0.1",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "mermaid": "^11.15.0",
+    "rxjs": "~7.8.0",
+    "shikidown": "^1.0.3",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.1",
+    "@angular/cli": "^22.0.1",
+    "@angular/compiler-cli": "^22.0.0",
+    "jsdom": "^28.0.0",
+    "ng-packagr": "^22.0.0",
+    "prettier": "^3.8.1",
+    "shiki": "^4.2.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}

@@ -1,0 +1,872 @@
+/* ── Design tokens (warm-dark palette, inspired by understand-anything.com) ── */
+:root {
+  --bg: #0a0a0a;
+  --fg: #e8e2d8;
+  --muted: #8a8578;
+  --border: #1a1a1a;
+  --primary: #d4a574;
+  --primary-fg: #0a0a0a;
+
+  /* --color-* scale cascades to the library's overlays + all 21 examples */
+  --color-bg: #141414;
+  --color-bg-subtle: #1a1a1a;
+  --color-bg-muted: #242424;
+  --color-fg: #e8e2d8;
+  --color-fg-muted: #a9a196;
+  --color-fg-subtle: #8a8578;
+  --color-border: #262626;
+  --color-border-strong: #383838;
+  --color-accent: #d4a574;
+  --color-accent-fg: #0a0a0a;
+  --color-accent-hover: #e8c99e;
+
+  /* Signature gradient + glow */
+  --accent-glow: rgb(212 165 116 / 0.15);
+  --grad-cool: #c9867a;
+  --grad-mid: #b8865c;
+  --grad-warm: #d4a574;
+  --gradient: linear-gradient(135deg, var(--grad-cool), var(--grad-mid), var(--grad-warm));
+
+  --font-heading: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+}
+
+.lede {
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+code {
+  background: rgb(212 165 116 / 0.12);
+  color: var(--color-accent);
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.3rem;
+  font-family: var(--font-code);
+  font-size: 0.85em;
+}
+
+/* ── Shared landing utilities (kept global to spare per-component CSS budget) ── */
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.7rem 1.3rem;
+  border-radius: 0.65rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.btn-cta--primary {
+  background: var(--gradient);
+  color: #0a0a0a;
+  box-shadow: 0 0 0 rgb(212 165 116 / 0);
+}
+
+.btn-cta--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgb(212 165 116 / 0.45), 0 12px 28px -12px rgb(0 0 0 / 0.8);
+}
+
+.btn-cta--ghost {
+  background: transparent;
+  color: var(--color-fg);
+  border-color: var(--color-border-strong);
+}
+
+.btn-cta--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.glow-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.85rem;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.25s ease;
+}
+
+.glow-card:hover {
+  transform: translateY(-3px);
+  border-color: rgb(212 165 116 / 0.5);
+  box-shadow: 0 0 34px var(--accent-glow), 0 24px 48px -20px rgb(0 0 0 / 0.7);
+}
+
+/* macOS-style window chrome (hero & CTA code frames) */
+.win-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  background: rgb(255 255 255 / 0.02);
+}
+
+.win-dot {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 999px;
+}
+
+.win-dot--r {
+  background: #ff5f57;
+}
+.win-dot--y {
+  background: #ffbd2e;
+}
+.win-dot--g {
+  background: #28c840;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.anim-rise {
+  opacity: 0;
+  animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-rise,
+  [class*="anim-"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--color-bg-subtle);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-fg-subtle);
+}
+
+.btn-ghost:hover {
+  background: transparent;
+  color: var(--color-fg-muted);
+}
+
+.btn-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ── Overlays ─────────────────────────────────────────────────────────────── */
+.ad-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgb(15 23 42 / 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.ad-overlay--top {
+  align-items: flex-start;
+  padding-top: 8rem;
+}
+
+.ad-overlay--bottom {
+  align-items: flex-end;
+  padding: 0;
+}
+
+.ad-overlay--end {
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.ad-overlay--image {
+  background: rgb(0 0 0 / 0.9);
+  backdrop-filter: none;
+  padding: 1.5rem;
+}
+
+.ad-overlay--bare {
+  background: transparent;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+
+/* ── Panels / cards ───────────────────────────────────────────────────────── */
+.ad-panel {
+  width: 100%;
+  max-width: 24rem;
+  padding: 1.5rem;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-panel p {
+  margin: 0;
+}
+
+.ad-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.ad-subtle {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-fg-subtle);
+}
+
+.ad-body {
+  color: var(--color-fg-muted);
+  font-size: 0.95rem;
+}
+
+.ad-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.ad-actions--split {
+  justify-content: space-between;
+}
+
+/* ── Form controls ────────────────────────────────────────────────────────── */
+.ad-input,
+.ad-select {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-fg);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.ad-input:focus,
+.ad-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.ad-input:disabled {
+  opacity: 0.5;
+}
+
+.ad-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-fg-subtle);
+}
+
+.ad-check input {
+  accent-color: var(--color-accent);
+}
+
+/* ── Stepper (wizard) ─────────────────────────────────────────────────────── */
+.ad-steps {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.ad-steps span {
+  height: 0.25rem;
+  flex: 1;
+  border-radius: 999px;
+  background: var(--color-bg-muted);
+}
+
+.ad-steps span.is-done {
+  background: var(--color-accent);
+}
+
+/* ── Lists (picker / menu / palette) ──────────────────────────────────────── */
+.ad-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.ad-list button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  color: var(--color-fg);
+  background: transparent;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.ad-list button:hover,
+.ad-list button.is-active {
+  background: var(--color-bg-subtle);
+}
+
+.ad-list .hint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--color-fg-subtle);
+}
+
+/* ── Close (×) button ─────────────────────────────────────────────────────── */
+.ad-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.25rem -0.25rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--color-fg-subtle);
+  background: transparent;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.ad-close:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-fg);
+}
+
+/* ── Floating widgets (toast / banner / status / upload) ──────────────────── */
+.ad-floating {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  transition: top 0.2s ease, bottom 0.2s ease;
+}
+
+.ad-floating > * {
+  pointer-events: auto;
+}
+
+.ad-toast {
+  min-width: 18rem;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-progress {
+  margin-top: 0.75rem;
+  height: 0.25rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-bg-muted);
+}
+
+.ad-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.2s ease;
+}
+
+.ad-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 20rem;
+  max-width: calc(100vw - 1.5rem);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #fecaca;
+  background: rgb(239 68 68 / 0.12);
+  border: 1px solid rgb(239 68 68 / 0.4);
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-banner .grow {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-banner .ad-close {
+  color: #fca5a5;
+}
+
+.ad-pill {
+  width: 18rem;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-segments {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+}
+
+.ad-segments span {
+  height: 0.25rem;
+  flex: 1;
+  border-radius: 999px;
+  background: var(--color-bg-muted);
+  transition: background 0.2s ease;
+}
+
+.ad-segments span.is-done {
+  background: var(--color-accent);
+}
+
+.ad-upload {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 18rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-upload .grow {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-upload .state {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--color-fg-subtle);
+}
+
+/* ── Context menu ─────────────────────────────────────────────────────────── */
+.ad-menu {
+  position: fixed;
+  z-index: 50;
+  min-width: 11rem;
+  padding: 0.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-menu button {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  color: var(--color-fg);
+  background: transparent;
+  border: none;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.ad-menu button:hover {
+  background: var(--color-bg-subtle);
+}
+
+.ad-menu button.is-danger {
+  color: #dc2626;
+}
+
+.ad-menu button.is-danger:hover {
+  background: rgb(220 38 38 / 0.1);
+}
+
+/* ── Command palette ──────────────────────────────────────────────────────── */
+.ad-palette {
+  width: 100%;
+  max-width: 28rem;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.35);
+}
+
+.ad-palette input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-fg);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ad-palette input:focus {
+  outline: none;
+}
+
+/* ── Bottom sheet / side drawer ───────────────────────────────────────────── */
+.ad-sheet {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 -20px 50px -10px rgb(0 0 0 / 0.35);
+  transition: transform 0.3s ease-out;
+}
+
+.ad-sheet.is-closing {
+  transform: translateY(100%);
+}
+
+.ad-grabber {
+  width: 2.5rem;
+  height: 0.25rem;
+  margin: 0 auto 0.75rem;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+}
+
+.ad-drawer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 22rem;
+  height: 100%;
+  background: var(--color-bg);
+  border-left: 1px solid var(--color-border);
+  box-shadow: -20px 0 50px -10px rgb(0 0 0 / 0.35);
+  transition: transform 0.3s ease-out;
+}
+
+.ad-drawer.is-closing {
+  transform: translateX(100%);
+}
+
+.ad-overlay.is-closing {
+  opacity: 0;
+}
+
+.ad-overlay--animated {
+  transition: opacity 0.3s ease;
+}
+
+.ad-drawer-head,
+.ad-drawer-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+}
+
+.ad-drawer-head {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ad-drawer-foot {
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.ad-drawer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.ad-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ad-row .hint {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--color-fg-subtle);
+}
+
+/* ── Swatches (color picker) ──────────────────────────────────────────────── */
+.ad-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+}
+
+.ad-swatch {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.ad-swatch:hover {
+  transform: scale(1.1);
+}
+
+.ad-swatch.is-selected {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 2px;
+}
+
+/* ── Lightbox ─────────────────────────────────────────────────────────────── */
+.ad-lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.5);
+}
+
+.ad-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  color: #fff;
+  background: rgb(255 255 255 / 0.12);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ad-lightbox-close:hover {
+  background: rgb(255 255 255 / 0.24);
+}
+
+/* ── Example trigger / status helpers ─────────────────────────────────────── */
+/* The example host (rendered via ngComponentOutlet) stacks its trigger and its
+ * status line vertically — the result shows BELOW the button, not beside it. */
+.stage > * {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ex-status {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--color-fg-subtle);
+}
+
+.ex-status--ok {
+  color: var(--color-accent);
+}
+
+.ex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.ex-target {
+  user-select: none;
+  padding: 1.5rem 2rem;
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+  background: var(--color-bg-subtle);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 0.5rem;
+  cursor: default;
+}
+
+.ex-swatch-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-fg);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.ex-swatch-chip {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--color-border-strong);
+}
+
+.ex-thumbs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ex-thumb {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.ex-thumb:hover {
+  transform: scale(1.05);
+}
+
+.ex-thumb img {
+  display: block;
+  width: 7rem;
+  height: 5rem;
+  object-fit: cover;
+}
+
+/* ── Native modal backdrop (for the lib's <dialog> wrapper, still exported) ── */
+dialog::backdrop {
+  background-color: rgb(15 23 42 / 0.5);
+}
+
+.ad-dialog--behind dialog::backdrop {
+  background-color: transparent;
+}
