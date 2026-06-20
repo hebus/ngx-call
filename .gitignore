@@ -43,5 +43,6 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Local agent settings
-.claude/
+# Local agent settings (keep shareable skills, ignore machine-local config)
+.claude/settings.local.json
+.claude/*.local.json
