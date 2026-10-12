@@ -36,7 +36,7 @@ ngx-call est publié avec 2FA (auth-and-publish). Donc **au moment du publish** 
 - Demander à l'utilisateur son **code OTP courant** (6 chiffres de son app d'authentification).
 - Lancer le publish immédiatement avec `--otp=<code>` (le code est valable assez longtemps).
 - Si le publish échoue pour OTP invalide/expiré (`EOTP`) → redemander un nouveau code et réessayer.
-- Secours : proposer à l'utilisateur de lancer lui-même `! npm publish dist/ngx-call --userconfig <fichier> --otp=<code>` (npm gère alors l'invite OTP nativement).
+- Secours : proposer à l'utilisateur de lancer lui-même `! npm publish ./dist/ngx-call --userconfig <fichier> --otp=<code>` (npm gère alors l'invite OTP nativement).
 
 ---
 
@@ -73,7 +73,7 @@ node -e "console.log(require('./dist/ngx-call/package.json').version)"   # doit 
 ### 5. Publish npm (avec OTP) — point de non-retour
 Demander l'OTP, puis :
 ```bash
-npm publish dist/ngx-call --userconfig <fichier-du-compte> --otp=<code> --access public
+npm publish ./dist/ngx-call --userconfig <fichier-du-compte> --otp=<code> --access public
 ```
 > `--access public` est sans effet sur un package non-scopé mais explicite l'intention.
 
