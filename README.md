@@ -49,6 +49,22 @@ Then capture the root injector at bootstrap:
 bootstrapApplication(App, { providers: [provideCallable()] });
 ```
 
+## Caller destroyed while a call is open
+
+A call outlives the component that made it: if that component is destroyed while the overlay is open, the promise would stay pending and your code would resume later on a destroyed component. Pass the caller's `DestroyRef` to end the call instead — the promise resolves with `undefined` and the instance is torn down:
+
+```typescript
+private readonly destroyRef = inject(DestroyRef);
+
+async rename(): Promise<void> {
+  const name = await RenameDialog.call({ current: this.name() }, { destroyRef: this.destroyRef });
+  if (name === undefined) return; // dismissed, or this component was destroyed
+  this.save(name);
+}
+```
+
+The registration is dropped as soon as the call ends normally. `upsert()` ignores the option when it reuses an already-live instance.
+
 ## Development
 
 This is a multi-project Angular workspace: the `ngx-call` library and a `demo` application.

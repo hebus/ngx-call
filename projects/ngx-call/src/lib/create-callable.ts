@@ -1,4 +1,4 @@
-import { EnvironmentProviders, inject, Injector, makeEnvironmentProviders, provideAppInitializer, Type } from "@angular/core";
+import { DestroyRef, EnvironmentProviders, inject, Injector, makeEnvironmentProviders, provideAppInitializer, Type } from "@angular/core";
 import { CallRef } from "./call-ref";
 import { DialogHandle, DialogService } from "./dialog.service";
 
@@ -22,6 +22,14 @@ export interface CallOptions {
    * exit animation. Overrides the value passed to {@link createCallable}.
    */
   unmountDelay?: number;
+  /**
+   * When destroyed (typically the caller component's `DestroyRef`), the call is
+   * ended and its promise resolves with `undefined` — so code after `await`
+   * must check for it before touching the caller. The registration is dropped
+   * as soon as the call ends normally. Ignored by {@link Callable.upsert} when
+   * it reuses an already-live instance.
+   */
+  destroyRef?: DestroyRef;
 }
 
 /**
@@ -165,7 +173,12 @@ export function createCallable<P = void, R = void, RP = void>(component: Type<un
 
     let instance: Instance;
     const promise = new Promise<R>(resolve => {
+      // End the call when the caller is destroyed instead of leaving the promise
+      // pending forever. `end()` is idempotent.
+      const unregisterDestroy = options.destroyRef?.onDestroy(() => callRef.end(undefined as R));
+
       callRef._attach((result: R) => {
+        unregisterDestroy?.();
         resolve(result);
         teardown(instance, options.unmountDelay ?? unmountDelay);
       });
