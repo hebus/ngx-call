@@ -1,5 +1,5 @@
 {
-  "name": "ngx-call",
+  "name": "ngx-call-workspace",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,10 @@
     "prebuild": "npm run gen:code",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "changeset:version": "changeset version"
   },
   "private": true,
   "packageManager": "npm@11.3.0",
@@ -35,6 +38,11 @@
     "prettier": "^3.8.1",
     "shiki": "^4.2.0",
     "typescript": "~6.0.2",
-    "vitest": "^4.0.8"
-  }
+    "vitest": "^4.0.8",
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.29.0"
+  },
+  "workspaces": [
+    "projects/ngx-call"
+  ]
 }

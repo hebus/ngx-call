@@ -5,15 +5,14 @@ description: Release the ngx-call library — bump version, build, publish to np
 
 # Release ngx-call
 
-Automatise la sortie d'une version de la librairie **ngx-call** : bump → build → publish npm → commit → tag → push → GitHub Release. Suivre les étapes **dans l'ordre**. L'ordre est conçu pour qu'aucun commit/tag ne soit créé tant que `npm publish` n'a pas réussi.
+Automatise la sortie d'une version de la librairie **ngx-call** : (version via Changesets) → build → publish npm → commit → tag → push → GitHub Release. Suivre les étapes **dans l'ordre**. L'ordre est conçu pour qu'aucun commit/tag ne soit créé tant que `npm publish` n'a pas réussi.
 
 ## Le package publié
 - Source de la lib : `projects/ngx-call/` (sa `package.json` porte la version publiée — **pas** la `package.json` racine, qui reste `0.0.0`).
 - Build : `npx ng build ngx-call` → sortie dans `dist/ngx-call/` (c'est CE dossier qu'on publie).
 
 ## Arguments attendus (à demander si absents)
-1. **Type de bump** : `patch` | `minor` | `major`, ou une version explicite `x.y.z`.
-2. **Compte npm** : le nom du compte (voir « Authentification » ci-dessous). Demander lequel — ne jamais deviner.
+1. **Compte npm** : le nom du compte (voir « Authentification » ci-dessous). Demander lequel — ne jamais deviner.
 
 ---
 
@@ -52,11 +51,15 @@ git rev-list --left-right --count origin/main...HEAD   # doit être "0\t0" (à j
 ```
 Puis le **garde-fou identité npm** (section Authentification) + confirmation du compte.
 
-### 2. Calculer la nouvelle version
-Lire la version actuelle dans `projects/ngx-call/package.json`. Appliquer le bump (`patch`/`minor`/`major`) ou prendre la version explicite. Nommer la cible `X.Y.Z` et le tag `vX.Y.Z`. Vérifier que `vX.Y.Z` n'existe pas déjà (`git tag -l vX.Y.Z` vide, et `npm view ngx-call@X.Y.Z` introuvable).
+### 2. Déterminer la version (gérée par Changesets)
+Le bump n'est **plus** fait à la main : la PR « chore: version packages » (générée par la CI `Release PR`) doit être **déjà mergée** sur `main`. Vérifier :
+```bash
+ls .changeset/*.md | grep -v README   # doit être VIDE (changesets consommés)
+```
+S'il reste des changesets → s'arrêter : demander de merger d'abord la PR « version packages » (voir `CONTRIBUTING.md`).
+Lire la version dans `projects/ngx-call/package.json` (= cible). Nommer la cible `X.Y.Z` et le tag `vX.Y.Z`. Vérifier que `vX.Y.Z` n'existe pas déjà (`git tag -l vX.Y.Z` vide, et `npm view ngx-call@X.Y.Z` introuvable).
 
-### 3. Bump (source uniquement, pas encore de commit)
-Éditer `projects/ngx-call/package.json` → champ `version` = `X.Y.Z`.
+### 3. (supprimé — la version est déjà bumpée par la PR Changesets)
 
 ### 4. Build de la lib
 ```bash
@@ -74,10 +77,7 @@ npm publish dist/ngx-call --userconfig <fichier-du-compte> --otp=<code> --access
 ```
 > `--access public` est sans effet sur un package non-scopé mais explicite l'intention.
 
-**Si échec** (OTP, droits, réseau) : ne RIEN committer/tagger. Réessayer (nouvel OTP) ou, si l'utilisateur abandonne, revert le bump local :
-```bash
-git checkout -- projects/ngx-call/package.json
-```
+**Si échec** (OTP, droits, réseau) : ne RIEN tagger. Réessayer (nouvel OTP).
 puis s'arrêter en expliquant.
 
 ### 6. Vérifier la publication
@@ -87,19 +87,14 @@ npm view ngx-call version dist-tags.latest    # doit refléter X.Y.Z
 
 ### 7. Commit + tag + push (seulement après publish OK)
 ```bash
-git add projects/ngx-call/package.json
-git commit -m "chore(ngx-call): release vX.Y.Z
-
-Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 git tag -a vX.Y.Z -m "ngx-call vX.Y.Z"
-git push origin main
 git push origin vX.Y.Z
 ```
-> Le push sur `main` redéclenche le déploiement de la démo (GitHub Pages) — inoffensif.
+> Aucun commit : le bump + `CHANGELOG.md` sont déjà sur `main` via la PR Changesets. Le tag se pose sur ce commit.
 
 ### 8. GitHub Release
 ```bash
-gh release create vX.Y.Z --repo hebus/ngx-call --title "vX.Y.Z" --generate-notes
+gh release create vX.Y.Z --repo hebus/ngx-call --title "vX.Y.Z" --notes-file <extrait de projects/ngx-call/CHANGELOG.md pour X.Y.Z>
 ```
 (Si on veut des notes éditoriales plutôt qu'auto-générées, rédiger `--notes "…"` à la place.)
 
@@ -111,8 +106,8 @@ Donner à l'utilisateur :
 - Rappel démo : https://hebus.github.io/ngx-call/
 
 ## Garde-fous récapitulatifs
-- ❌ Jamais committer/tagger avant un publish réussi.
+- ❌ Jamais tagger avant un publish réussi.
+- ❌ Jamais éditer `version` à la main (Changesets).
 - ❌ Jamais publier sans avoir confirmé `npm whoami` (bon compte).
 - ❌ Jamais stocker token/OTP ; l'OTP est demandé à chaque release.
 - ✅ Arbre propre + branche `main` à jour avant de commencer.
-- ✅ En cas d'abandon après bump : `git checkout -- projects/ngx-call/package.json`.

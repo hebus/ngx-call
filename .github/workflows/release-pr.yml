@@ -1,0 +1,33 @@
+name: Release PR
+
+# Ouvre / met à jour la PR « Version Packages » quand des changesets sont
+# présents sur main. Ne publie PAS : le publish npm (2FA/OTP) + tag + GitHub
+# Release restent manuels via le skill `release`, après merge de cette PR.
+
+on:
+  push:
+    branches: [main]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: changesets/action@v1
+        with:
+          version: npm run changeset:version
+          title: "chore: version packages"
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,33 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+
+jobs:
+  changeset:
+    # Bypass pour les PR docs/CI/chore : ajouter `#skip-changeset` dans le TITRE
+    # de la PR (ou le label `skip-changeset`). La PR « Version Packages »
+    # (branche changeset-release/main) est exclue : ses changesets viennent
+    # justement d'être consommés.
+    if: >-
+      ${{ !contains(github.event.pull_request.title, '#skip-changeset')
+      && !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+      && github.head_ref != 'changeset-release/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify a changeset is present
+        run: |
+          ADDED=$(git diff --name-only --diff-filter=A \
+            "origin/${{ github.base_ref }}...HEAD" -- '.changeset/*.md' \
+            | grep -v 'README.md' || true)
+          if [ -z "$ADDED" ]; then
+            echo "::error::Aucun changeset dans cette PR. Lance 'npm run changeset' pour en créer un, ou ajoute '#skip-changeset' au titre de la PR (docs/CI uniquement)."
+            exit 1
+          fi
+          echo "Changeset(s) détecté(s):"
+          echo "$ADDED"
