@@ -1,5 +1,11 @@
 # ngx-call
 
+## 0.3.0
+
+### Minor Changes
+
+- [#2](https://github.com/hebus/ngx-call/pull/2) [`613e3dc`](https://github.com/hebus/ngx-call/commit/613e3dc7d62dc682fb018a479f8cfd5e7c04115b) Thanks [@hebus](https://github.com/hebus)! - `CallOptions` gains `container`: the element the instance is mounted in (`document.body` by default). Pass the nearest `[popover]` ancestor when calling from inside a native `popover="auto"` — `showModal()` hides every auto popover that is not an ancestor of the dialog, so a dialog mounted in `document.body` closes the popover that opened it. `DialogService.mount()` accepts the same container as an optional 4th argument.
+
 ## 0.2.0
 
 ### Minor Changes
