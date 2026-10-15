@@ -45,8 +45,14 @@ export class DialogService {
    * @param component - Standalone component injecting `CALL_REF` (via `injectCallRef`).
    * @param callRef - The instance's resolution handle and reactive props.
    * @param parentInjector - Injector to parent the instance's DI to.
+   * @param container - Element the instance is appended to. Defaults to `document.body`.
    */
-  mount(component: Type<unknown>, callRef: CallRef<unknown, unknown, unknown>, parentInjector: Injector): DialogHandle {
+  mount(
+    component: Type<unknown>,
+    callRef: CallRef<unknown, unknown, unknown>,
+    parentInjector: Injector,
+    container: HTMLElement = document.body
+  ): DialogHandle {
     const elementInjector = Injector.create({
       parent: parentInjector,
       providers: [{ provide: CALL_REF, useValue: callRef }]
@@ -57,7 +63,7 @@ export class DialogService {
       elementInjector
     });
 
-    document.body.appendChild(ref.location.nativeElement);
+    container.appendChild(ref.location.nativeElement);
     this.appRef.attachView(ref.hostView);
     this.instances.update(list => [...list, { ref, callRef }]);
     this.syncBackdrops();

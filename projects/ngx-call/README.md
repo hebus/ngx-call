@@ -120,6 +120,19 @@ dialog::backdrop { background-color: rgb(0 0 0 / 0.5); }
 
 `call.index()` / `call.stackSize()` expose the instance's position for position-aware UI (e.g. a cascade offset — apply transforms to `DialogContent`, never to the `<dialog>` element itself, as a transform on a top-layer element breaks its rendering). `DialogService.closeAll(result?)` resolves and tears down every open instance at once.
 
+### Mounting inside a popover (`container`)
+
+By default each instance is appended to `document.body`. Pass `container` to mount it elsewhere. The main use case is calling a dialog from inside a native `popover="auto"` (menu, picker…): `dialog.showModal()` hides every auto popover that is **not an ancestor of the dialog**, so a dialog mounted in `document.body` closes the popover that opened it — and destroys the caller along with it. Mounting the dialog inside the popover avoids this:
+
+```typescript
+openConfirm(event: Event) {
+  const container = (event.target as HTMLElement).closest<HTMLElement>("[popover]") ?? undefined;
+  return Confirm.call({ message: "Delete?" }, { container });
+}
+```
+
+`container` is optional (`undefined` keeps `document.body`). `DialogService.mount()` takes the same element as an optional 4th argument.
+
 ## Compatibility
 
 Angular **22+** (`@angular/core` and `@angular/common` are peer dependencies, `^22.0.0`). Standalone APIs only.
