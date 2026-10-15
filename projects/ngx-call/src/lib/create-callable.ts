@@ -30,6 +30,15 @@ export interface CallOptions {
    * it reuses an already-live instance.
    */
   destroyRef?: DestroyRef;
+  /**
+   * Element the instance is mounted in. Defaults to `document.body`.
+   *
+   * Pass the nearest `[popover]` ancestor (`el.closest("[popover]")`) when the call is made from
+   * inside a native `popover="auto"`: `showModal()` hides every auto popover that is not an ancestor
+   * of the dialog, so a dialog mounted in `document.body` closes the popover that opened it (and
+   * destroys the caller). Ignored by {@link Callable.upsert} when it reuses an already-live instance.
+   */
+  container?: HTMLElement;
 }
 
 /**
@@ -184,7 +193,7 @@ export function createCallable<P = void, R = void, RP = void>(component: Type<un
       });
     });
 
-    const mounted = injector.get(DialogService).mount(component, callRef as CallRef<unknown, unknown, unknown>, injector);
+    const mounted = injector.get(DialogService).mount(component, callRef as CallRef<unknown, unknown, unknown>, injector, options.container);
     instance = { promise, callRef, mounted };
     instances.push(instance);
     sync();
