@@ -34,7 +34,7 @@ Commit it with your change. The `Changeset Check` workflow fails the PR if none 
 
 1. On every push to `main`, the `Release PR` workflow opens/updates a **"chore: version packages"** PR that bumps `projects/ngx-call/package.json` and writes `projects/ngx-call/CHANGELOG.md`.
 2. Merge it when you want to ship.
-3. Publish locally (npm 2FA/OTP, tag, GitHub Release) with the `release` skill — see `.claude/skills/release/SKILL.md`.
+3. Publish locally (npm 2FA/OTP, tag, GitHub Release) with `npm run release` (add `-- --dry-run` to rehearse, `-- --userconfig <.npmrc>` to pick the npm account), or with the `release` skill — see `.claude/skills/release/SKILL.md`.
 
 ## Cheat sheet
 
