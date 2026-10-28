@@ -12,7 +12,7 @@ import { findExample } from "./examples/registry";
   imports: [RouterLink, NgComponentOutlet, CodeBlock],
   template: `
     @if (example(); as ex) {
-      <a class="back" routerLink="/">← All examples</a>
+      <a class="back" routerLink="/examples">← All examples</a>
       <h1>{{ ex.title }}</h1>
       <p class="lede">{{ ex.description }}</p>
 
@@ -24,7 +24,7 @@ import { findExample } from "./examples/registry";
       <p class="muted hint">The component, the callable, and the trigger — everything you need to reproduce it.</p>
       <code-block [slug]="ex.slug" />
     } @else {
-      <p class="lede">Unknown example. <a routerLink="/">Back to all examples →</a></p>
+      <p class="lede">Unknown example. <a routerLink="/examples">Back to all examples →</a></p>
     }
   `,
   styles: [
@@ -71,7 +71,9 @@ import { findExample } from "./examples/registry";
         background: var(--color-bg);
         border: 1px solid var(--color-border);
         border-radius: 0.75rem;
-        box-shadow: 0 0 50px rgb(212 165 116 / 0.05), 0 24px 48px -28px rgb(0 0 0 / 0.8);
+        box-shadow:
+          0 0 50px rgb(212 165 116 / 0.05),
+          0 24px 48px -28px rgb(0 0 0 / 0.8);
       }
     `
   ]

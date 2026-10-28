@@ -1,11 +1,14 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
+import { EXAMPLES, ExampleMeta } from "./examples/registry";
+import { InstallBlock } from "./install-block";
+
+const FEATURED = ["command-palette", "bottom-sheet", "wizard", "color-picker", "context-menu", "progress-toast"];
 
 /** Landing page: hero + call-to-action, then every example as a card, grouped by category. */
 @Component({
   selector: "examples-home",
-  imports: [RouterLink],
+  imports: [RouterLink, InstallBlock],
   template: `
     <!-- ── Hero ──────────────────────────────────────────────────────────── -->
     <section class="hero">
@@ -27,7 +30,7 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
         <a class="btn-cta btn-cta--primary" [href]="repoUrl" target="_blank" rel="noopener">
           <span aria-hidden="true">★</span> Star on GitHub
         </a>
-        <a class="btn-cta btn-cta--ghost" routerLink="/" fragment="examples">Explore 21 examples ↓</a>
+        <a class="btn-cta btn-cta--ghost" routerLink="/" fragment="install">Install ↓</a>
       </div>
 
       <div class="code-window anim-rise" style="animation-delay: 0.36s">
@@ -37,7 +40,9 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
           <span class="win-dot win-dot--g"></span>
           <span class="win-file">confirm.ts</span>
         </div>
-        <pre class="code-body"><code><span class="t-key">import</span> <span class="t-pun">&#123;</span> createCallable <span class="t-pun">&#125;</span> <span class="t-key">from</span> <span class="t-str">"ngx-call"</span><span class="t-pun">;</span>
+        <pre
+          class="code-body"
+        ><code><span class="t-key">import</span> <span class="t-pun">&#123;</span> createCallable <span class="t-pun">&#125;</span> <span class="t-key">from</span> <span class="t-str">"ngx-call"</span><span class="t-pun">;</span>
 
 <span class="t-com">// 1 — bind any component, once</span>
 <span class="t-key">export const</span> <span class="t-fn">Confirm</span> <span class="t-pun">=</span> <span class="t-fn">createCallable</span><span class="t-type">&lt;&#123; message: string &#125;, boolean&gt;</span><span class="t-pun">(</span>ConfirmDialog<span class="t-pun">);</span>
@@ -50,33 +55,39 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
 
     <!-- ── Proof line ────────────────────────────────────────────────────── -->
     <div class="proof anim-rise" style="animation-delay: 0.44s">
-      <span><b>21</b> live examples</span><span class="sep">·</span>
-      <span><b>0</b> dependencies</span><span class="sep">·</span>
+      <span
+        ><b>{{ total }}</b> live examples</span
+      ><span class="sep">·</span> <span><b>0</b> dependencies</span><span class="sep">·</span>
       <span><b>100%</b> type-safe</span><span class="sep">·</span>
       <span>Angular <b>20+</b></span>
     </div>
 
-    <!-- ── Examples ──────────────────────────────────────────────────────── -->
+    <!-- ── Install ───────────────────────────────────────────────────────── -->
+    <section id="install" class="install-section">
+      <h2>Get started in seconds.</h2>
+      <p>Install the library from npm, and teach your AI agent about it with the skill.</p>
+      <install-block />
+    </section>
+
+    <!-- ── Featured examples ─────────────────────────────────────────────── -->
     <div id="examples">
       <div class="examples-head">
-        <h2>Every pattern, live.</h2>
-        <p>The 21 official react-call examples, ported to Angular — each one with its full source.</p>
+        <h2>Not only confirmations.</h2>
+        <p>Menus, drawers, wizards, toasts… anything overlay-shaped, each one with its full source.</p>
       </div>
-
-      @for (cat of categories; track cat) {
-        <section class="cat">
-          <h3 class="cat-title">{{ cat }}</h3>
-          <div class="ex-grid">
-            @for (ex of byCategory(cat); track ex.slug) {
-              <a class="ex-link glow-card" [routerLink]="['/examples', ex.slug]">
-                <h4>{{ ex.title }}</h4>
-                <p>{{ ex.description }}</p>
-                <span class="go">View example →</span>
-              </a>
-            }
-          </div>
-        </section>
-      }
+      <div class="ex-grid">
+        @for (ex of featured; track ex.slug) {
+          <a class="ex-link glow-card" [routerLink]="['/examples', ex.slug]">
+            <span class="ex-cat">{{ ex.category }}</span>
+            <h4>{{ ex.title }}</h4>
+            <p>{{ ex.description }}</p>
+            <span class="go">Try it and see the code →</span>
+          </a>
+        }
+      </div>
+      <p class="all-examples">
+        <a class="btn-cta btn-cta--ghost" routerLink="/examples">Browse all {{ total }} examples →</a>
+      </p>
     </div>
 
     <!-- ── Final CTA ─────────────────────────────────────────────────────── -->
@@ -87,7 +98,7 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
         <a class="btn-cta btn-cta--primary" [href]="repoUrl" target="_blank" rel="noopener">
           <span aria-hidden="true">★</span> Star on GitHub
         </a>
-        <code class="install">npm i ngx-call</code>
+        <code class="install">npm install ngx-call</code>
       </div>
     </section>
   `,
@@ -173,7 +184,9 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
         background: var(--color-bg);
         border: 1px solid var(--color-border);
         border-radius: 0.85rem;
-        box-shadow: 0 0 60px rgb(212 165 116 / 0.08), 0 30px 60px -25px rgb(0 0 0 / 0.9);
+        box-shadow:
+          0 0 60px rgb(212 165 116 / 0.08),
+          0 30px 60px -25px rgb(0 0 0 / 0.9);
       }
 
       .win-file {
@@ -257,18 +270,39 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
         font-size: 0.95rem;
       }
 
-      .cat {
-        padding: 1.75rem 0;
-        border-top: 1px solid var(--color-border);
+      .install-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        scroll-margin-top: 5rem;
+        padding-top: 3.5rem;
       }
 
-      .cat-title {
+      .install-section h2 {
+        font-family: var(--font-heading);
+        font-weight: 400;
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        margin: 0 0 0.4rem;
+      }
+
+      .install-section p {
+        margin: 0 0 1.5rem;
+        color: var(--color-fg-muted);
+        font-size: 0.95rem;
+      }
+
+      .ex-cat {
         font-family: var(--font-code);
-        font-size: 0.74rem;
+        font-size: 0.66rem;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
-        margin: 0 0 1rem;
-        color: var(--color-fg-subtle);
+        color: var(--color-accent);
+      }
+
+      .all-examples {
+        margin: 1.75rem 0 0;
+        text-align: center;
       }
 
       .ex-grid {
@@ -352,8 +386,6 @@ import { CATEGORIES, EXAMPLES, ExampleMeta } from "./examples/registry";
 export class ExamplesHome {
   /** Single point of truth for the GitHub CTA. */
   protected readonly repoUrl = "https://github.com/hebus/ngx-call";
-  protected readonly categories = CATEGORIES;
-  protected byCategory(category: string): ExampleMeta[] {
-    return EXAMPLES.filter(e => e.category === category);
-  }
+  protected readonly total = EXAMPLES.length;
+  protected readonly featured: readonly ExampleMeta[] = FEATURED.map(slug => EXAMPLES.find(e => e.slug === slug)!);
 }

@@ -6,11 +6,10 @@ import { RouterLink, RouterOutlet } from "@angular/router";
   imports: [RouterOutlet, RouterLink],
   template: `
     <header class="topbar">
-      <a class="brand" routerLink="/">
-        ngx<span class="brand-dot">·</span>call
-      </a>
+      <a class="brand" routerLink="/"> ngx<span class="brand-dot">·</span>call </a>
       <nav class="nav">
-        <a class="nav-link" routerLink="/" fragment="examples">Examples</a>
+        <a class="nav-link" routerLink="/" fragment="install">Install</a>
+        <a class="nav-link" routerLink="/examples">Examples</a>
         <a class="nav-link nav-link--muted" href="https://github.com/desko27/react-call" target="_blank" rel="noopener"
           >inspired by react-call ↗</a
         >
