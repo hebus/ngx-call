@@ -1,5 +1,11 @@
 # ngx-call
 
+## 0.3.1
+
+### Patch Changes
+
+- [#5](https://github.com/hebus/ngx-call/pull/5) [`02cbbd3`](https://github.com/hebus/ngx-call/commit/02cbbd3edfa7fafc211391b9a2c5d82faae3cf89) Thanks [@hebus](https://github.com/hebus)! - Document the `ngx-call` agent skill (`npx skills add hebus/ngx-call --skill ngx-call`) in the README
+
 ## 0.3.0
 
 ### Minor Changes
