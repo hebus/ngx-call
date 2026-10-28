@@ -28,6 +28,8 @@ export interface ExampleMeta {
   title: string;
   description: string;
   category: string;
+  /** Feature tags (update, stacking, …) used by the examples filter. */
+  tags?: readonly string[];
   /** The trigger component rendered live on the example page. */
   component: Type<unknown>;
 }
@@ -61,6 +63,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Nested dialog",
     description: "A callable that opens itself, with independent promise resolution per instance.",
     category: "Dialogs",
+    tags: ["Nested", "Stacking"],
     component: NestedExample
   },
 
@@ -70,6 +73,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Save form with mutation flow",
     description: "Async submit via createMutationFlow: pending tracking, retry by staying open.",
     category: "Mutations & context",
+    tags: ["Mutation flow", "Exit animation"],
     component: SaveFormExample
   },
   {
@@ -77,6 +81,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Account-aware dialog",
     description: "Access root props (user context) via call.root, without passing them each call.",
     category: "Mutations & context",
+    tags: ["Root props"],
     component: GreeterExample
   },
   {
@@ -84,6 +89,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Confirm with optional async",
     description: "One callable supporting instant close or async handling, per caller.",
     category: "Mutations & context",
+    tags: ["Mutation flow"],
     component: OptionalMutationExample
   },
 
@@ -93,6 +99,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Progress toast",
     description: "A singleton toast updating itself via upsert() as work progresses.",
     category: "Notifications",
+    tags: ["Upsert", "Update"],
     component: ProgressToastExample
   },
   {
@@ -100,6 +107,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Auto-dismissing error",
     description: "A transient banner closing itself; multiple calls stack independently.",
     category: "Notifications",
+    tags: ["Stacking", "Update"],
     component: ErrorBannerExample
   },
   {
@@ -107,6 +115,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Live status update",
     description: "A pinned pill updated from the caller via update(handle, props).",
     category: "Notifications",
+    tags: ["Update"],
     component: LiveStatusExample
   },
   {
@@ -114,6 +123,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Broadcast to every call",
     description: "A single update(props) affects all open instances, each keeping its own state.",
     category: "Notifications",
+    tags: ["Update", "Stacking"],
     component: BroadcastUpdateExample
   },
 
@@ -146,6 +156,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Command palette (⌘K)",
     description: "A searchable action list with keyboard navigation (arrows, Enter, Esc).",
     category: "Menus",
+    tags: ["Update"],
     component: CommandPaletteExample
   },
 
@@ -155,6 +166,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Bottom sheet",
     description: "A mobile-pattern panel sliding from the bottom with an exit animation.",
     category: "Drawers",
+    tags: ["Exit animation"],
     component: BottomSheetExample
   },
   {
@@ -162,6 +174,7 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Settings drawer",
     description: "A side panel owning its form state, resolving with saved values or null.",
     category: "Drawers",
+    tags: ["Update", "Exit animation"],
     component: SettingsDrawerExample
   },
 
@@ -194,12 +207,25 @@ export const EXAMPLES: readonly ExampleMeta[] = [
     title: "Resolve from the caller",
     description: "External settlement via Approval.end(handle, value), with no dialog interaction.",
     category: "Flows",
+    tags: ["End from caller"],
     component: CallerResolveExample
   }
 ];
 
 /** Categories in display order, derived from {@link EXAMPLES}. */
 export const CATEGORIES: readonly string[] = [...new Set(EXAMPLES.map(e => e.category))];
+
+/** Every tag used by at least one example, in a fixed display order. */
+export const TAGS: readonly string[] = [
+  "Update",
+  "Upsert",
+  "Mutation flow",
+  "Stacking",
+  "Nested",
+  "Exit animation",
+  "Root props",
+  "End from caller"
+].filter(t => EXAMPLES.some(e => e.tags?.includes(t)));
 
 /** Look up an example by its slug. */
 export const findExample = (slug: string | null): ExampleMeta | undefined => EXAMPLES.find(e => e.slug === slug);

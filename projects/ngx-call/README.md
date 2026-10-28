@@ -133,6 +133,14 @@ openConfirm(event: Event) {
 
 `container` is optional (`undefined` keeps `document.body`). `DialogService.mount()` takes the same element as an optional 4th argument.
 
+## AI agent skill
+
+Teach your coding agent (Claude Code, Cursor, Copilot…) how to use ngx-call:
+
+```bash
+npx skills add hebus/ngx-call --skill ngx-call
+```
+
 ## Compatibility
 
 Angular **22+** (`@angular/core` and `@angular/common` are peer dependencies, `^22.0.0`). Standalone APIs only.
