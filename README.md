@@ -49,6 +49,14 @@ Then capture the root injector at bootstrap:
 bootstrapApplication(App, { providers: [provideCallable()] });
 ```
 
+## AI agent skill
+
+Teach your coding agent (Claude Code, Cursor, Copilot…) how to use ngx-call:
+
+```bash
+npx skills add hebus/ngx-call --skill ngx-call
+```
+
 ## Caller destroyed while a call is open
 
 A call outlives the component that made it: if that component is destroyed while the overlay is open, the promise would stay pending and your code would resume later on a destroyed component. Pass the caller's `DestroyRef` to end the call instead — the promise resolves with `undefined` and the instance is torn down:

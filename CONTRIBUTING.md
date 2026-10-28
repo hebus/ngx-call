@@ -30,6 +30,10 @@ Commit it with your change. The `Changeset Check` workflow fails the PR if none 
 
 **No release needed** (docs, CI, demo, chore): add `#skip-changeset` to the PR title, or the `skip-changeset` label, or run `npx changeset --empty`.
 
+## Agent skill
+
+`skills/ngx-call/` is the public skill installed with `npx skills add hebus/ngx-call --skill ngx-call`. If a PR changes the public API (`projects/ngx-call/src/public-api.ts` or `lib/*.ts`), update `skills/ngx-call/SKILL.md` and `references/` accordingly. It is not part of the npm package, so it needs no changeset.
+
 ## Releasing (maintainer)
 
 1. On every push to `main`, the `Release PR` workflow opens/updates a **"chore: version packages"** PR that bumps `projects/ngx-call/package.json` and writes `projects/ngx-call/CHANGELOG.md`.

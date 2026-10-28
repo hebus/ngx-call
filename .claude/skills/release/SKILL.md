@@ -1,6 +1,8 @@
 ---
 name: release
 description: Release the ngx-call library — bump version, build, publish to npm (multi-account + 2FA/OTP aware), tag, push, and create a GitHub Release. Trigger when the user asks to "release", "publish ngx-call", "cut a release", "bump and publish", "ship a new version", or similar.
+metadata:
+  internal: true
 ---
 
 # Release ngx-call
