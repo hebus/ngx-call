@@ -37,7 +37,7 @@ setRoot(props: RP): void;                               // ambient props, reacti
 
 | Option | Meaning |
 | --- | --- |
-| `injector` | Injector used to resolve `DialogService` and parent the instance DI. Defaults to the one captured by `provideCallable()`. |
+| `injector` | Injector used to resolve `DialogService` and parent the instance DI; the instance also resolves the providers of its environment injector (e.g. a lazy route's). Defaults to the one captured by `provideCallable()`. |
 | `unmountDelay` | ms between resolution and teardown (exit animation). Overrides the `createCallable` default. |
 | `destroyRef` | When destroyed, the call ends and resolves with `undefined` — check before touching the caller after `await`. |
 | `container` | Element to mount into (default `document.body`). Ignored by `upsert` when reusing a live instance. |

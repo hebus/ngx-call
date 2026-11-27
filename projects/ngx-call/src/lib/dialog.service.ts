@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentRef, computed, createComponent, Injectable, Injector, signal, Type } from "@angular/core";
+import { ApplicationRef, ComponentRef, computed, createComponent, EnvironmentInjector, Injectable, Injector, signal, Type } from "@angular/core";
 import { CALL_REF, CallRef } from "./call-ref";
 
 interface MountedInstance {
@@ -44,7 +44,8 @@ export class DialogService {
    *
    * @param component - Standalone component injecting `CALL_REF` (via `injectCallRef`).
    * @param callRef - The instance's resolution handle and reactive props.
-   * @param parentInjector - Injector to parent the instance's DI to.
+   * @param parentInjector - Injector to parent the instance's DI to. The instance also resolves the providers of its
+   * environment injector (a lazy route's, for instance), not only the root ones.
    * @param container - Element the instance is appended to. Defaults to `document.body`.
    */
   mount(
@@ -58,8 +59,13 @@ export class DialogService {
       providers: [{ provide: CALL_REF, useValue: callRef }]
     });
 
+    // The caller's environment injector, not the root one: Angular looks a token up in the element injector chain
+    // first, then in `environmentInjector`. A provider declared on the caller's route (or any environment injector
+    // below the root) is invisible to the element chain, so with the root injector here the instance would resolve
+    // a root instance of the same token instead of the one its caller uses. `appRef.injector` is the fallback when
+    // the parent chain has no environment injector.
     const ref = createComponent(component, {
-      environmentInjector: this.appRef.injector,
+      environmentInjector: parentInjector.get(EnvironmentInjector, this.appRef.injector),
       elementInjector
     });
 
