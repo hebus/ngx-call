@@ -1,5 +1,13 @@
 # ngx-call
 
+## 0.3.1
+
+### Patch Changes
+
+- [#5](https://github.com/hebus/ngx-call/pull/5) [`02cbbd3`](https://github.com/hebus/ngx-call/commit/02cbbd3edfa7fafc211391b9a2c5d82faae3cf89) Thanks [@hebus](https://github.com/hebus)! - Document the `ngx-call` agent skill (`npx skills add hebus/ngx-call --skill ngx-call`) in the README
+
+- [#7](https://github.com/hebus/ngx-call/pull/7) [`9ae679c`](https://github.com/hebus/ngx-call/commit/9ae679ce22da00814b6c9069f2fd08f2f0da2fc1) Thanks [@hebus](https://github.com/hebus)! - A callable instance now resolves the providers of the caller's environment injector, such as the providers of a lazy route, instead of only those of the root injector. A service provided on a route and injected by the dialog component used to resolve a separate root instance of the same token.
+
 ## 0.3.0
 
 ### Minor Changes
