@@ -83,6 +83,8 @@ const result = await Confirm.call({ title: 'Confirm', message: 'Continue?' });
 ```
 
 > Without `provideCallable()`, pass an injector explicitly: `Confirm.call(props, { injector })`.
+>
+> The instance resolves the providers of the injector you pass, including those of its environment injector (for instance a lazy route's), so a service provided on the route that opens the dialog is the one the dialog injects.
 
 ## How it differs from react-call
 

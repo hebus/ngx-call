@@ -13,7 +13,8 @@ let rootInjector: Injector | null = null;
  */
 export interface CallOptions {
   /**
-   * Injector used to resolve `DialogService` and parent the instance's DI.
+   * Injector used to resolve `DialogService` and parent the instance's DI. The instance also resolves the providers
+   * of this injector's environment injector (a lazy route's, for instance).
    * Defaults to the root injector captured by {@link provideCallable}.
    */
   injector?: Injector;
